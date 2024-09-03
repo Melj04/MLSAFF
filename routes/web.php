@@ -74,3 +74,4 @@ Route::middleware(['auth', 'verified', 'VerifyDevice'])->group(function () {
 
 
 require __DIR__ . '/auth.php';
+#hello
