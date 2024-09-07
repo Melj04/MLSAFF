@@ -18,6 +18,9 @@ use App\Http\Controllers\updateFeeding;
 Route::post('/activeFed', [updateFeeding::class, 'activeFed']);
 Route::post('/AmFed', [updateFeeding::class, 'AmFed']);
 Route::post('/PmFed', [updateFeeding::class, 'PmFed']);
+Route::post('/upW',[updateFeeding::class, 'upW']);
+Route::post('/upWeight',[updateFeeding::class, 'upWeight']);
+Route::post('/sensor',[updateFeeding::class, 'sensor']);
 Route::post('/logs',[updateFeeding::class, 'logs']);
 use App\Http\Controllers\EspDataController;
 
