@@ -22,12 +22,7 @@
                                 {{ __('Next Feeding schedule') }}
                             </h2>
                             <hr>
-                            <p class="font-semibold text-xl my-1 text-gray-700 text-center leading-tight">
-                                {{ __('7:30 am') }}
-                            </p>
-                            <p class="font-semibold text-lg text-gray-700 text-center leading-tight">
-                                {{ __('03/04/2024') }}
-                            </p>
+                            @livewire('next-fed')
                         </div>
                         <div class="bg-white shadow-sm rounded-lg p-6">
                             <h2 class="font-semibold text-xs mb-1 text-gray-800 leading-tight">
@@ -141,11 +136,9 @@
                 }
             });
 
-            let allData = [];
-
             function updateChart() {
                 $.ajax({
-                    url: '/chart-data', // Adjust the URL as needed
+                    url: '/chart-data', // Ensure this matches the route in your controller
                     method: 'GET',
                     success: function(data) {
                         if (Array.isArray(data)) {
@@ -169,6 +162,9 @@
                             myChart.data.datasets[0].data = values;
                             myChart.update();
                         }
+                    },
+                    error: function(xhr, status, error) {
+                        console.error('Error fetching chart data:', status, error);
                     }
                 });
             }
@@ -180,4 +176,5 @@
             setInterval(updateChart, 5000);
         });
     </script>
+
 </x-app-layout>
