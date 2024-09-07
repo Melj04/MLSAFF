@@ -85,6 +85,6 @@ class updateFeeding extends Controller
         ]);
 
         // Return a JSON response with a 201 status
-        return response()->json(['message' => 'logs errors'], 201);
+        return response()->json(['message' => 'logs complete'], 201);
     }
 }
