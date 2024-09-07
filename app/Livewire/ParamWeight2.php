@@ -150,7 +150,7 @@ class ParamWeight2 extends Component
     {
         // Validate hour and minute before encryption and saving
         $this->validate([
-            'hour' => 'integer|min:1|max:6',
+            'hour' => 'integer|min:13|max:18',
             'minute' => 'integer|min:0|max:59',
         ]);
 

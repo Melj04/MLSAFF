@@ -32,7 +32,6 @@ class RfidBinding_controller extends Controller
             $rfidTag->user_id = $request->input('user_id');
             $rfidTag->save();
             return redirect()->route('rfid.unbound')->with('status', 'RFID tag updated with new user successfully.');
-
         } else {
             return back()->withErrors(['error' => 'RFID tag invalid.']);
         }
@@ -51,7 +50,7 @@ class RfidBinding_controller extends Controller
         $tag = hex2bin($request->input('tag'));
 
         // Retrieve sensor details from the database
-        $sensor = IoT_devices::find(1);
+        $sensor = IoT_devices::find(4);
 
         // Convert hex to binary for encryption/decryption
         $key = hex2bin($sensor->key);
@@ -79,22 +78,65 @@ class RfidBinding_controller extends Controller
         $rfidTag = RfidBInd::where('tag', $rfidTagValue)->first();
 
         if ($rfidTag && $rfidTag->user_id) {
-            // If the RFID tag is found and bound, update the command table (e.g., access=true)
-            Command::updateOrCreate(
-                ['rfid_tag_id' => $rfidTag->id],
-                ['access' => true]
-            );
+        // If the RFID tag is found and bound, update the command table (e.g., access=true)
+        $cmd="1";
+        $lock = $this->lockEncrypt($cmd);
+        // Save the encrypted data and tags to the 'command' and 'tag' columns in the 'commands' table
+        $command = Command::find(11);
+        if ($command) {
+            $command->command = $lock['ciphertext'];
+            $command->tag = $lock['tag'];
+            $command->save();
+        }
+        return response()->json(['access' => 'grant'], 201);
 
-            return response()->json(['access' => 'granted', 'user_id' => $rfidTag->user_id]);
         } else {
             // Store the RFID tag in the database to wait until it is bound
             RfidBInd::updateOrCreate(
                 ['tag' => $rfidTagValue],
                 ['user_id' => null]
             );
-
+        $cmd="0";
+        $lock = $this->lockEncrypt($cmd);
+        // Save the encrypted data and tags to the 'command' and 'tag' columns in the 'commands' table
+        $command = Command::find(11);
+        if ($command) {
+            $command->command = $lock['ciphertext'];
+            $command->tag = $lock['tag'];
+            $command->save();
+        }
             return response()->json(['access' => 'denied'], 403);
         }
+    }
+
+    public function lockEncrypt($cmd)
+    {
+        return $this->encrypt($cmd); // Status value is "1" for active
+    }
+    protected function encrypt($data)
+    {
+        $commandStat = Command::find(11);
+        $ActiveStat = IoT_devices::find($commandStat->actuators_id);
+        $key = hex2bin($ActiveStat->key);
+        $nonce = hex2bin($ActiveStat->nonce);
+
+        // Encrypt the data and generate the authentication tag
+        $ciphertext = sodium_crypto_aead_chacha20poly1305_ietf_encrypt(
+            $data,
+            '',
+            $nonce,
+            $key
+        );
+
+        // Extract the tag from the ciphertext
+        $tagLength = SODIUM_CRYPTO_AEAD_CHACHA20POLY1305_IETF_ABYTES;
+        $tag = substr($ciphertext, -$tagLength);
+        $ciphertext = substr($ciphertext, 0, -$tagLength);
+
+        return [
+            'ciphertext' => bin2hex($ciphertext),
+            'tag' => bin2hex($tag)
+        ];
     }
 
     public function showUnboundTags()
@@ -104,4 +146,28 @@ class RfidBinding_controller extends Controller
         $users = User::all(); // Fetch users for the binding form
         return view('rfid.unbind', compact('unboundTags', 'users'));
     }
+
+    public function cmd(Request $request){
+         // Validate the incoming request
+    $validatedData = $request->validate([
+        'tag' => 'required',
+        'ciphertext' => 'required',
+    ]);
+
+    // Fetch the command by ID (example: 11)
+    $command = Command::find(11);
+
+    // If command exists, update the 'command' and 'tag' fields
+    if ($command) {
+        $command->command = $validatedData['Ciphertext']; // Use the correct field from the request
+        $command->tag = $validatedData['tag']; // Ensure the 'tag' field is updated correctly
+        $command->save();
+    }
+
+    // Return a JSON response with a 201 status
+    return response()->json(['storage' => 'closed'], 201);
+    }
+
+
 }
+
