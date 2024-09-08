@@ -90,7 +90,7 @@ class Weight extends Component
 
     public function down()
     {
-        if ($this->numWeight > 0) {
+        if ($this->numWeight > 10) {
             $this->numWeight -= 10;
         }
     }

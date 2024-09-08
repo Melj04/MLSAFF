@@ -40,7 +40,7 @@ class updateFeeding extends Controller
 
     // If command exists, update the 'command' and 'tag' fields
     if ($command) {
-        $command->command = $validatedData['Ciphertext']; // Use the correct field from the request
+        $command->command = $validatedData['ciphertext']; // Use the correct field from the request
         $command->tag = $validatedData['tag']; // Ensure the 'tag' field is updated correctly
         $command->save();
     }
@@ -62,7 +62,7 @@ class updateFeeding extends Controller
 
     // If command exists, update the 'command' and 'tag' fields
     if ($command) {
-        $command->command = $validatedData['Ciphertext']; // Use the correct field from the request
+        $command->command = $validatedData['ciphertext']; // Use the correct field from the request
         $command->tag = $validatedData['tag']; // Ensure the 'tag' field is updated correctly
         $command->save();
     }

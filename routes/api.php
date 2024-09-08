@@ -16,6 +16,7 @@ Route::post('/cmd', [RfidBinding_controller::class, 'cmd']);
 
 use App\Http\Controllers\updateFeeding;
 Route::post('/activeFed', [updateFeeding::class, 'activeFed']);
+
 Route::post('/AmFed', [updateFeeding::class, 'AmFed']);
 Route::post('/PmFed', [updateFeeding::class, 'PmFed']);
 Route::post('/upW',[updateFeeding::class, 'upW']);

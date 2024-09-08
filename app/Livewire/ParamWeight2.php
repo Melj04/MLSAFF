@@ -213,7 +213,7 @@ class ParamWeight2 extends Component
 
     public function down()
     {
-        if ($this->numWeight > 0) {
+        if ($this->numWeight > 10) {
             $this->numWeight = $this->numWeight - 10;
         }
     }
