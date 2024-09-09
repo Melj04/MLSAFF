@@ -6,9 +6,12 @@
     </x-slot>
     <div class="flex justify-center flex-col-reverse sm:flex-row mt-2 h-fit">
         <div class="py-1 bg-white grow rounded-lg xs:my-0 sm:my-8 max-w-xl basis-7/12 sm:px-2 h-5/6">
-            <h2 class="font-semibold text-md my-1 ml-1 text-gray-800 leading-tight">
+            <div class="flex justify-between">
+                <h2 class="font-semibold text-md my-1 ml-1 text-gray-800 leading-tight ">
                 {{ __('Feeding History') }}
-            </h2>
+                </h2>
+                @livewire('monthly-report')
+            </div>
             <hr class="w-11/12 mx-2">
             <canvas id="myChart"></canvas>
         </div>

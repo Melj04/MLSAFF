@@ -78,7 +78,7 @@ class ParamWeight2 extends Component
         return $this->encrypt((string)$this->minute, $this->rtc);
     }
 
-    public function decryptData()
+    protected function decryptData()
     {
         // Decrypt weight data
         $commandW = Command::find(10);
@@ -150,7 +150,7 @@ class ParamWeight2 extends Component
     {
         // Validate hour and minute before encryption and saving
         $this->validate([
-            'hour' => 'integer|min:13|max:18',
+            'hour' => 'integer|min:13|max:24',
             'minute' => 'integer|min:0|max:59',
         ]);
 

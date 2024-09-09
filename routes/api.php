@@ -14,6 +14,7 @@ Route::post('/receive', [EncryptionController::class, 'receiveData']);
 Route::post('/verify-tag', [RfidBinding_controller::class, 'verifyTag'])->name('rfid.verify');
 Route::post('/cmd', [RfidBinding_controller::class, 'cmd']);
 
+
 use App\Http\Controllers\updateFeeding;
 Route::post('/activeFed', [updateFeeding::class, 'activeFed']);
 

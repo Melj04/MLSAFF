@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Models\Command;
 use App\Models\IoT_devices;
 use Livewire\Component;
+use Stringable;
 
 class Weight extends Component
 {
@@ -12,6 +13,10 @@ class Weight extends Component
     public $device;
     public $message;
     public $ActiveStat;
+    public $amH;
+    public $amM;
+    public $pmH;
+    public $pmM;
 
     public function mount()
     {
@@ -20,8 +25,89 @@ class Weight extends Component
         $this->device = IoT_devices::find($commandW->actuators_id);
         $commandStat = Command::find(7);
         $this->ActiveStat = IoT_devices::find($commandStat->actuators_id);
+
+
     }
 
+    protected function shouldHideButton()
+    {
+        $currentTime = now(); // Get the current time
+        $this->amH=$this->decryptime(1);
+        $this->amM=$this->decryptime(2);
+        $this->pmH=$this->decryptime(3);
+        $this->pmM=$this->decryptime(4);
+
+            $amHour = (int) $this->amH;
+            $amMinute = (int) $this->amM;
+
+            if ($currentTime->hour == $amHour && $currentTime->minute == $amMinute) {
+                return true; // Hide the button
+                $this->message= "Morning Feeding in progress. ";
+            }
+
+
+        // Check if current time matches the decrypted PM feed time
+            $pmHour = (int) $this->pmH;
+            $pmMinute = (int) $this->pmM;
+
+            if ($currentTime->hour == $pmHour && $currentTime->minute == $pmMinute) {
+                return true; // Hide the button
+                $this->message= "Afternoon Feeding in progress. ";
+
+            }
+
+        return false; // Do not hide the button
+
+    }
+
+
+protected function decryptime($id)
+{
+    // Decrypt time data
+    $command = Command::find($id);
+    $iot=IoT_devices::find($command->actuators_id);
+    if ($command && $iot) {
+        $ciphertextHex = $command->command;
+        $tagHex = $command->tag;
+        $ciphertextBinary = hex2bin($ciphertextHex);
+        $tagBinary = hex2bin($tagHex);
+        $key = hex2bin($iot->key);
+        $nonce = hex2bin($iot->nonce);
+
+        $time = sodium_crypto_aead_chacha20poly1305_ietf_decrypt(
+            $ciphertextBinary . $tagBinary,
+            '',
+            $nonce,
+            $key
+        );
+
+        return $time;
+    }
+}
+    protected function decryptData()
+    {
+        // Decrypt weight data
+        $commandW = Command::find(10);
+        if ($commandW && $this->device) {
+            $ciphertextHex = $commandW->command;
+            $tagHex = $commandW->tag;
+            $ciphertextBinary = hex2bin($ciphertextHex);
+            $tagBinary = hex2bin($tagHex);
+            $key = hex2bin($this->device->key);
+            $nonce = hex2bin($this->device->nonce);
+
+            $decryptedWeight = sodium_crypto_aead_chacha20poly1305_ietf_decrypt(
+                $ciphertextBinary . $tagBinary,
+                '',
+                $nonce,
+                $key
+            );
+
+            $this->numWeight = $decryptedWeight !== false ? (int)$decryptedWeight : 0;
+        } else {
+            $this->numWeight = 0;
+        }
+    }
     protected function encrypt($data, $iot)
     {
         $key = hex2bin($iot->key);
@@ -97,6 +183,8 @@ class Weight extends Component
 
     public function render()
     {
-        return view('livewire.weight');
+        return view('livewire.weight', [
+            'shouldHideButton' => $this->shouldHideButton(), // Pass the result to the view
+        ]);
     }
 }

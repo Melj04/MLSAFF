@@ -11,6 +11,7 @@ class CircularProgressBar extends Component
     public int $reference_weight = 1000; // 1kg in grams
     public int $current_weight = 1;      // Default to 1g
     public $percentage = 0;
+    public $kg;
     protected $device;
 
     public function mount()
@@ -55,6 +56,10 @@ class CircularProgressBar extends Component
         // Ensure reference_weight is not zero to avoid division by zero
         if ($this->reference_weight > 0) {
             $this->percentage = ($this->current_weight / $this->reference_weight) * 100;
+            $this->kg=$this->current_weight/1000;
+            if($this->kg<=0){
+                $this->kg=0;
+            }
         } else {
             $this->percentage = 0; // Default to 0 if reference_weight is invalid
         }
@@ -64,6 +69,7 @@ class CircularProgressBar extends Component
     {
         return view('livewire.circular-progress-bar', [
             'percentage' => $this->percentage,
+            'percentage' => $this->kg,
         ]);
     }
 }
