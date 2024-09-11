@@ -17,6 +17,11 @@
 
     <!-- Livewire Styles -->
     @livewireStyles
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Bootstrap JS (Bootstrap 5 does not require jQuery) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -43,8 +48,10 @@
             {{ $slot }}
         </main>
     </div>
+    @include('sweetalert::alert')
 
     <!-- Livewire Scripts -->
     @livewireScripts
+
 </body>
 </html>

@@ -50,14 +50,12 @@
 
                         <!-- admin -->
                         @if (auth()->user()->role === 1)
-                            <div class="w-full px-4 py-2 text-sm text-gray-700 focus:outline-none">
-                                {{ __('Manage User') }}
-                            </div>
-                            <div class="pl-4">
-                                <x-dropdown-link :href="route('rfid.unbound')" :active="request()->routeIs('rfid.unbound')">
-                                    {{ __('Unbound RFID') }}
-                                </x-dropdown-link>
-                            </div>
+                            <x-dropdown-link :href="route('admin.users')" :active="request()->routeIs('admin.users')">
+                            {{ __('Manage User') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('rfid.unbound')" :active="request()->routeIs('rfid.unbound')">
+                                {{ __('Unbound RFID') }}
+                            </x-dropdown-link>
                         @endif
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">

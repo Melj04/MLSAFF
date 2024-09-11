@@ -13,14 +13,27 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Auth\DeviceVerificationController;
 
 use App\Http\Controllers\RfidBinding_controller;
+use App\Http\Controllers\userManage;
 
+
+Route::middleware('auth','admin')->group(function () {
 Route::get('/bind-rfid', [RfidBinding_controller::class, 'showBindForm'])->name('rfid.bind');
 Route::post('/bind-rfid', [RfidBinding_controller::class, 'bindTag'])->name('rfid.bind.submit');
 Route::get('/unbound-tags', [RfidBinding_controller::class, 'showUnboundTags'])->name('rfid.unbound');
 
+//
+Route::get('/admin/users', [userManage::class, 'index'])->name('admin.users');
+
+// Route to update users (role and status)
+Route::put('/admin/users/{id}', [userManage::class, 'update'])->name('admin.users.update');
+
+// Route for password verification
+Route::post('/admin/users/verify/{id}', [userManage::class, 'verifyPassword'])->name('admin.users.verify');
+
+});
+
 use App\Http\Controllers\EncryptionController;
 
-Route::get('/encryption/{sensorId}', [EncryptionController::class, 'encryptDecrypt']);
 
 Route::get('/welcome', function () {
     return view('welcome');
@@ -40,6 +53,7 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
 
 // OTP routes
 Route::middleware('auth')->group(function () {
+    Route::get('/encryption/{sensorId}', [EncryptionController::class, 'encryptDecrypt']);
     Route::get('device/verify', [DeviceVerificationController::class, 'showVerifyForm'])->name('device.show');
     Route::post('/device/verify', [DeviceVerificationController::class, 'verify'])->name('device.verify');
     Route::post('/device/resend', [DeviceVerificationController::class, 'resend'])->name('device.resend');

@@ -11,9 +11,9 @@ class ParamWeight2 extends Component
     public $numWeight = 0;
     public $hour = 0;
     public $minute = 0;
-    public $device;
-    public $rtc;
-    public $ActiveStat;
+    protected $device;
+    protected $rtc;
+    protected $ActiveStat;
     public $message;
     public $message2;
 
@@ -36,6 +36,9 @@ class ParamWeight2 extends Component
 
     protected function encrypt($data, $device)
     {
+
+        $device = Command::find($device);
+        $device = IoT_devices::find($device->actuators_id);
         $key = hex2bin($device->key);
         $nonce = hex2bin($device->nonce);
 
@@ -60,22 +63,22 @@ class ParamWeight2 extends Component
 
     public function aWeight()
     {
-        return $this->encrypt((string)$this->numWeight, $this->device);
+        return $this->encrypt((string)$this->numWeight, 10);
     }
 
     public function statEncrypt()
     {
-        return $this->encrypt("1", $this->ActiveStat); // Status value is "1" for active
+        return $this->encrypt("1", 6); // Status value is "1" for active
     }
 
     public function h()
     {
-        return $this->encrypt((string)$this->hour, $this->rtc);
+        return $this->encrypt((string)$this->hour, 3);
     }
 
     public function m()
     {
-        return $this->encrypt((string)$this->minute, $this->rtc);
+        return $this->encrypt((string)$this->minute, 3);
     }
 
     protected function decryptData()
@@ -146,6 +149,12 @@ class ParamWeight2 extends Component
         }
     }
 
+    public $modalVisible = false; // To control modal visibility
+
+    public function showModal()
+    {
+        $this->modalVisible = true; // Show the modal
+    }
     public function saveWeightAfternoon()
     {
         // Validate hour and minute before encryption and saving
@@ -202,6 +211,8 @@ class ParamWeight2 extends Component
         }
 
         $this->message2 = "Update successfully";
+        $this->modalVisible = false;
+
     }
 
     public function up()
