@@ -1,7 +1,7 @@
 <?php
 namespace App\Livewire;
 
-use App\Models\Command;
+use App\Models\command;
 use App\Models\IoT_devices;
 use Livewire\Component;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -149,10 +149,11 @@ class Weight extends Component
     public function showModal()
     {
         $this->modalVisible = true; // Show the modal
-    }
+        }
     // Method to save the weight and show an alert
     public function saveWeight()
     {
+        if($this->numWeight > 0){
         $weightData = $this->encryptData();
         $statusData = $this->statEncrypt();
 
@@ -175,6 +176,7 @@ class Weight extends Component
             $this->message = 'Status command not found';
             return;
         }
+        }else{$this->message="Feeding amount should be grater than 0.";}
         $this->modalVisible = false;
     }
 

@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use App\Models\Command;
+use App\Models\command;
 use App\Models\IoT_devices;
 use Livewire\Component;
 

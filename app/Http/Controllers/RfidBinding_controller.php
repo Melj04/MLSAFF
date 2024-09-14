@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RfidBInd;
 use App\Models\IoT_devices;
-use App\Models\Command;
+use App\Models\command;
 use App\Models\User;
 use Illuminate\Http\Request;
 

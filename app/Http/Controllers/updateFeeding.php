@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Command;
+use App\Models\command;
 use App\Models\logs;
 use Illuminate\Http\Request;
 use App\Models\sensor_reading;

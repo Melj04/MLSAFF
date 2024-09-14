@@ -35,7 +35,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" wire:click="$set('modalVisible', false)">Cancel</button>
-                <button type="button" class="btn btn-danger" wire:click="saveWeightAfternoon">Confirm</button>
+                <button type="button" class="btn btn-danger" wire:click="saveWeightMorning">Confirm</button>
             </div>
         </div>
     </div>

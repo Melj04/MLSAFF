@@ -2,7 +2,7 @@
 
 namespace App\Livewire;
 
-use App\Models\Command;
+use App\Models\command;
 use App\Models\IoT_devices;
 use Livewire\Component;
 
@@ -159,7 +159,7 @@ class ParamWeight2 extends Component
     {
         // Validate hour and minute before encryption and saving
         $this->validate([
-            'hour' => 'integer|min:13|max:24',
+            'hour' => 'integer|min:13|max:18',
             'minute' => 'integer|min:0|max:59',
         ]);
 

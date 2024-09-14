@@ -55,8 +55,8 @@ Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
 Route::middleware('auth')->group(function () {
     Route::get('/encryption/{sensorId}', [EncryptionController::class, 'encryptDecrypt']);
     Route::get('device/verify', [DeviceVerificationController::class, 'showVerifyForm'])->name('device.show');
-    Route::post('/device/verify', [DeviceVerificationController::class, 'verify'])->name('device.verify');
-    Route::post('/device/resend', [DeviceVerificationController::class, 'resend'])->name('device.resend');
+    Route::post('/device/verify', [DeviceVerificationController::class, 'verify'])->middleware('throttle:6,1')->name('device.verify');
+    Route::post('/device/resend', [DeviceVerificationController::class, 'resend'])->middleware('throttle:6,1')->name('device.resend');
 });
 
 Route::middleware('auth')->group(function () {
